@@ -47,7 +47,7 @@ class CompanyControllerTest {
     @Test
     void testGetCompanyByIdNotFound() {
         Integer companyId = 999;
-        webTestClient.get().uri(CompanyController.COMPANY_PATH_ID,companyId)
+        webTestClient.get().uri(CompanyController.COMPANY_PATH_ID, companyId)
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -79,9 +79,9 @@ class CompanyControllerTest {
     @Test
     void testUpdateCompany() {
         final Integer companyId = 1;
-        webTestClient.put().uri(CompanyController.COMPANY_PATH_ID,companyId)
-                .body(Mono.just(CompanyRepositoryTest.getTestCompany()),CompanyDTO.class)
-                .header("Content-type","application/json")
+        webTestClient.put().uri(CompanyController.COMPANY_PATH_ID, companyId)
+                .body(Mono.just(CompanyRepositoryTest.getTestCompany()), CompanyDTO.class)
+                .header("Content-type", "application/json")
                 .exchange()
                 .expectStatus().isNoContent();
     }
@@ -92,9 +92,9 @@ class CompanyControllerTest {
         Company testCompany = CompanyRepositoryTest.getTestCompany();
         testCompany.setName("");
 
-        webTestClient.put().uri(CompanyController.COMPANY_PATH_ID,companyId)
-                .body(Mono.just(testCompany),CompanyDTO.class)
-                .header("Content-type","application/json")
+        webTestClient.put().uri(CompanyController.COMPANY_PATH_ID, companyId)
+                .body(Mono.just(testCompany), CompanyDTO.class)
+                .header("Content-type", "application/json")
                 .exchange()
                 .expectStatus().isBadRequest();
     }
@@ -102,9 +102,9 @@ class CompanyControllerTest {
     @Test
     void testUpdateCompanyNotFound() {
         Integer companyId = 999;
-        webTestClient.put().uri(CompanyController.COMPANY_PATH_ID,companyId)
-                .header("Content-type","application/json")
-                .body(Mono.just(CompanyRepositoryTest.getTestCompany()),CompanyDTO.class)
+        webTestClient.put().uri(CompanyController.COMPANY_PATH_ID, companyId)
+                .header("Content-type", "application/json")
+                .body(Mono.just(CompanyRepositoryTest.getTestCompany()), CompanyDTO.class)
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -112,7 +112,7 @@ class CompanyControllerTest {
     @Test
     void testDeleteCompanyById() {
         final Integer companyId = 1;
-        webTestClient.delete().uri(CompanyController.COMPANY_PATH_ID,companyId)
+        webTestClient.delete().uri(CompanyController.COMPANY_PATH_ID, companyId)
                 .exchange()
                 .expectStatus().isNoContent();
     }
@@ -120,7 +120,7 @@ class CompanyControllerTest {
     @Test
     void testDeleteCompanyByIdNotFound() {
         final Integer companyId = 999;
-        webTestClient.delete().uri(CompanyController.COMPANY_PATH_ID,companyId)
+        webTestClient.delete().uri(CompanyController.COMPANY_PATH_ID, companyId)
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -128,8 +128,8 @@ class CompanyControllerTest {
     @Test
     void TestPatchIdNotFound() {
         Integer companyId = 999;
-        webTestClient.patch().uri(CompanyController.COMPANY_PATH_ID,companyId)
-                .body(Mono.just(CompanyRepositoryTest.getTestCompany()),CompanyDTO.class)
+        webTestClient.patch().uri(CompanyController.COMPANY_PATH_ID, companyId)
+                .body(Mono.just(CompanyRepositoryTest.getTestCompany()), CompanyDTO.class)
                 .exchange()
                 .expectStatus().isNotFound();
 
