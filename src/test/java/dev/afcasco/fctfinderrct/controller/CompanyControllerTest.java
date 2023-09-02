@@ -1,5 +1,6 @@
 package dev.afcasco.fctfinderrct.controller;
 
+import dev.afcasco.fctfinderrct.domain.Company;
 import dev.afcasco.fctfinderrct.model.CompanyDTO;
 import dev.afcasco.fctfinderrct.respository.CompanyRepositoryTest;
 import org.junit.jupiter.api.MethodOrderer;
@@ -32,6 +33,7 @@ class CompanyControllerTest {
     }
 
     @Test
+    @Order(2)
     void testGetCompanyByIdFound() {
         Integer companyId = 1;
 
@@ -43,6 +45,14 @@ class CompanyControllerTest {
     }
 
     @Test
+    void testGetCompanyByIdNotFound() {
+        Integer companyId = 999;
+        webTestClient.get().uri(CompanyController.COMPANY_PATH_ID,companyId)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
     void testCreateNewCompany() {
         webTestClient.post().uri(CompanyController.COMPANY_PATH)
                 .body(Mono.just(CompanyRepositoryTest.getTestCompany()), CompanyDTO.class)
@@ -51,6 +61,18 @@ class CompanyControllerTest {
                 .expectStatus().isCreated()
                 .expectHeader().location("http://localhost:8080/api/v1/company/4")
                 .expectBody(CompanyDTO.class);
+    }
+
+    @Test
+    void testCreateNewCompanyBadData() {
+        Company testCompany = CompanyRepositoryTest.getTestCompany();
+        testCompany.setName("");
+
+        webTestClient.post().uri(CompanyController.COMPANY_PATH)
+                .body(Mono.just(testCompany), CompanyDTO.class)
+                .header("Content-type", "application/json")
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 
 
@@ -65,13 +87,51 @@ class CompanyControllerTest {
     }
 
     @Test
+    void testUpdateCompanyBadData() {
+        final Integer companyId = 1;
+        Company testCompany = CompanyRepositoryTest.getTestCompany();
+        testCompany.setName("");
+
+        webTestClient.put().uri(CompanyController.COMPANY_PATH_ID,companyId)
+                .body(Mono.just(testCompany),CompanyDTO.class)
+                .header("Content-type","application/json")
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void testUpdateCompanyNotFound() {
+        Integer companyId = 999;
+        webTestClient.put().uri(CompanyController.COMPANY_PATH_ID,companyId)
+                .header("Content-type","application/json")
+                .body(Mono.just(CompanyRepositoryTest.getTestCompany()),CompanyDTO.class)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
     void testDeleteCompanyById() {
         final Integer companyId = 1;
         webTestClient.delete().uri(CompanyController.COMPANY_PATH_ID,companyId)
                 .exchange()
                 .expectStatus().isNoContent();
+    }
 
+    @Test
+    void testDeleteCompanyByIdNotFound() {
+        final Integer companyId = 999;
+        webTestClient.delete().uri(CompanyController.COMPANY_PATH_ID,companyId)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
 
+    @Test
+    void TestPatchIdNotFound() {
+        Integer companyId = 999;
+        webTestClient.patch().uri(CompanyController.COMPANY_PATH_ID,companyId)
+                .body(Mono.just(CompanyRepositoryTest.getTestCompany()),CompanyDTO.class)
+                .exchange()
+                .expectStatus().isNotFound();
 
     }
 }
